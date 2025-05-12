@@ -1,0 +1,80 @@
+import requests
+from ftplib import FTP
+from io import BytesIO
+
+# SAP endpoint and request headers
+SAP_ENDPOINT = "https://example.sap.com/sap/bc/srt/scs/sap/querymaterialin?sap-vhost=example.sap.com"
+AUTH_HEADER = "Basic <REPLACE_WITH_YOUR_AUTH>"
+HEADERS = {
+    "Authorization": AUTH_HEADER,
+    "Content-Type": "text/xml; charset=utf-8",
+    "Connection": "keep-alive"
+}
+
+# FTP connection settings
+FTP_HOST = "example.com"
+FTP_USER = "your_ftp_username"
+FTP_PASS = "your_ftp_password"
+FTP_PORT = 21
+FTP_DIR = "/path/to/upload"
+
+# SOAP payload to fetch material data
+SOAP_REQUEST = '''<?xml version="1.0" encoding="utf-8"?>
+<soapenv:Envelope
+    xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:glob="http://sap.com/xi/SAPGlobal20/Global"
+    xmlns:gdt="http://sap.com/xi/AP/Common/GDT">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <glob:MaterialByElementsQuery_sync>
+            <MaterialSelectionByElements>
+            </MaterialSelectionByElements>
+            <ProcessingConditions>
+                <QueryHitsMaximumNumberValue>200</QueryHitsMaximumNumberValue>
+                <QueryHitsUnlimitedIndicator>false</QueryHitsUnlimitedIndicator>
+                <LastReturnedObjectID></LastReturnedObjectID>
+            </ProcessingConditions>
+        </glob:MaterialByElementsQuery_sync>
+    </soapenv:Body>
+</soapenv:Envelope>'''
+
+def fetch_material_data():
+    """
+    Sends a SOAP request to the SAP endpoint and retrieves material data.
+    Returns the raw XML response if successful, None otherwise.
+    """
+    print("Requesting material data from SAP...")
+    try:
+        res = requests.post(SAP_ENDPOINT, headers=HEADERS, data=SOAP_REQUEST)
+        if res.status_code != 200:
+            print(f"SAP request failed with status code {res.status_code}")
+            return None
+        print("Data received successfully.")
+        return res.content
+    except Exception as e:
+        print(f"Error while connecting to SAP: {e}")
+        return None
+
+def upload_file_to_ftp(file_data, filename="sap_data.xml"):
+    """
+    Uploads a file to the configured FTP server.
+    """
+    print(f"Connecting to FTP: {FTP_HOST}:{FTP_PORT}")
+    try:
+        ftp = FTP()
+        ftp.connect(FTP_HOST, FTP_PORT)
+        ftp.login(FTP_USER, FTP_PASS)
+        print(f"Uploading {filename} to {FTP_DIR}...")
+        ftp.storbinary(f"STOR {FTP_DIR}/{filename}", BytesIO(file_data))
+        ftp.quit()
+        print("Upload completed.")
+    except Exception as e:
+        print(f"FTP upload failed: {e}")
+
+def main():
+    data = fetch_material_data()
+    if data:
+        upload_file_to_ftp(data)
+
+if __name__ == "__main__":
+    main()
