@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap-env:Header/>
+  <soap-env:Body>
+    <n0:SalesOrderBundleMaintainRequest_sync xmlns:n0="http://sap.com/xi/SAPGlobal20/Global">
+      <SalesOrder>
+        <ID></ID>
+
+        <!-- Sales organization configuration -->
+        <SalesAndServiceBusinessArea>
+          <SalesOrganisationID>{{SALES_ORG_ID}}</SalesOrganisationID>
+          <DistributionChannelCode>{{DIST_CHANNEL_CODE}}</DistributionChannelCode>
+        </SalesAndServiceBusinessArea>
+
+        <!-- Related business parties -->
+        <SalesUnitParty>
+          <PartyID>{{SALES_UNIT_ID}}</PartyID>
+        </SalesUnitParty>
+        <AccountParty>
+          <PartyID>{{CUSTOMER_ID}}</PartyID>
+        </AccountParty>
+        <BillToParty>
+          <PartyID>{{CUSTOMER_ID}}</PartyID>
+        </BillToParty>
+        <PayerParty>
+          <PartyID>{{CUSTOMER_ID}}</PartyID>
+        </PayerParty>
+        <ProductRecipientParty>
+          <PartyID>{{CUSTOMER_ID}}</PartyID>
+        </ProductRecipientParty>
+
+        <!-- Order item -->
+        <Item>
+          <ID>{{ITEM_ID}}</ID>
+          <ProcessingTypeCode>{{ITEM_TYPE}}</ProcessingTypeCode>
+          <ItemProduct>
+            <ProductID>{{PRODUCT_ID}}</ProductID>
+            <Description languageCode="EN">{{PRODUCT_DESCRIPTION}}</Description>
+            <UnitOfMeasure>{{UOM}}</UnitOfMeasure>
+          </ItemProduct>
+
+          <!-- Delivery schedule -->
+          <ItemScheduleLine>
+            <ID>{{SCHEDULE_ID}}</ID>
+            <TypeCode>{{SCHEDULE_TYPE}}</TypeCode>
+            <Quantity unitCode="{{UOM}}">{{QUANTITY}}</Quantity>
+            <DateTimePeriod>
+              <StartDateTime>{{START_DATETIME}}</StartDateTime>
+              <EndDateTime>{{END_DATETIME}}</EndDateTime>
+            </DateTimePeriod>
+          </ItemScheduleLine>
+        </Item>
+
+        <!-- Pricing and delivery terms -->
+        <PricingTerms>
+          <CurrencyCode>{{CURRENCY}}</CurrencyCode>
+          <GrossAmountIndicator>{{IS_GROSS}}</GrossAmountIndicator>
+        </PricingTerms>
+        <DeliveryTerms>
+          <DeliveryPriorityCode>{{DELIVERY_PRIORITY}}</DeliveryPriorityCode>
+          <CompleteDeliveryRequestedIndicator>{{COMPLETE_DELIVERY}}</CompleteDeliveryRequestedIndicator>
+        </DeliveryTerms>
+      </SalesOrder>
+    </n0:SalesOrderBundleMaintainRequest_sync>
+  </soap-env:Body>
+</soap-env:Envelope>
