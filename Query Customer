@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <CustomerByIdentificationQuery_sync xmlns="http://sap.com/xi/SAPGlobal20/Global">
+      
+      <!-- Customer selection criteria -->
+      <CustomerSelectionByIdentification>
+        <SelectionByInternalID>
+          <InclusionExclusionCode>I</InclusionExclusionCode>
+          <IntervalBoundaryTypeCode>{{BOUNDARY_TYPE}}</IntervalBoundaryTypeCode>
+          <LowerBoundaryInternalID>{{LOWER_BOUNDARY_ID}}</LowerBoundaryInternalID>
+          <UpperBoundaryInternalID>{{UPPER_BOUNDARY_ID}}</UpperBoundaryInternalID>
+        </SelectionByInternalID>
+      </CustomerSelectionByIdentification>
+
+      <!-- Query limits and paging -->
+      <ProcessingConditions>
+        <QueryHitsMaximumNumberValue>{{MAX_RESULTS}}</QueryHitsMaximumNumberValue>
+        <LastReturnedObjectID>{{LAST_OBJECT_ID}}</LastReturnedObjectID>
+      </ProcessingConditions>
+
+      <!-- Requested customer data scope -->
+      <RequestedElements customerTransmissionRequestCode="true">
+        <Customer
+          addressInformationTransmissionRequestCode="true"
+          relationshipTransmissionRequestCode="true"
+          contactPersonTransmissionRequestCode="true"
+          communicationArrangementTransmissionRequestCode="true"
+          communicationArrangementMultiChannelTransmissionRequestCode="true"
+          directResponsibilityTransmissionRequestCode="true"
+          salesArrangementTransmissionRequestCode="true"
+          bankDetailsTransmissionRequestCode="true"
+          paymentCardDetailsTransmissionRequestCode="true"
+          paymentDataTransmissionRequestCode="true"
+          personTransmissionRequestCode="true"
+          taxNumberTransmissionRequestCode="true"
+          generalProductTaxExemptionTransmissionRequestCode="true"
+          operatingHoursInfoTransmissionRequestCode="true"
+          organisationTransmissionRequestCode="true"
+          textTransmissionRequestCode="true"
+          attachmentFolderTransmissionRequestCode="true"
+        />
+      </RequestedElements>
+      
+    </CustomerByIdentificationQuery_sync>
+  </soap:Body>
+</soap:Envelope>
