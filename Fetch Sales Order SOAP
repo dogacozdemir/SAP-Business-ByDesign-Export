@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope
+    xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:sap="http://sap.com/xi/SAPGlobal20/Global">
+
+  <soapenv:Header/>
+
+  <soapenv:Body>
+    <sap:SalesOrderByElementsQuery_sync>
+      <SalesOrderSelectionByElements>
+
+        <!-- Filter by Sales Order ID -->
+        <SelectionByID>
+          <InclusionExclusionCode>I</InclusionExclusionCode>
+          <IntervalBoundaryTypeCode>{{BOUNDARY_TYPE_CODE}}</IntervalBoundaryTypeCode>
+          <LowerBoundaryID>{{SALES_ORDER_ID_PATTERN}}</LowerBoundaryID>
+        </SelectionByID>
+
+        <!-- You can add more filters here (e.g., date, status) -->
+
+      </SalesOrderSelectionByElements>
+
+      <ProcessingConditions>
+        <QueryHitsMaximumNumberValue>{{MAX_RESULTS}}</QueryHitsMaximumNumberValue>
+        <QueryHitsUnlimitedIndicator>{{UNLIMITED}}</QueryHitsUnlimitedIndicator>
+      </ProcessingConditions>
+    </sap:SalesOrderByElementsQuery_sync>
+  </soapenv:Body>
+</soapenv:Envelope>
