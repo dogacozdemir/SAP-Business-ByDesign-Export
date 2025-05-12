@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope
+    xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:glob="http://sap.com/xi/SAPGlobal20/Global"
+    xmlns:gdt="http://sap.com/xi/AP/Common/GDT">
+
+  <soapenv:Header/>
+
+  <soapenv:Body>
+    <glob:MaterialByElementsQuery_sync>
+      <MaterialSelectionByElements>
+        <SelectionByInternalID>
+          <InclusionExclusionCode>I</InclusionExclusionCode>
+          <IntervalBoundaryTypeCode>3</IntervalBoundaryTypeCode>
+          <ProductCategoryID>{{PRODUCT_CATEGORY_ID}}</ProductCategoryID>
+        </SelectionByInternalID>
+      </MaterialSelectionByElements>
+
+      <ProcessingConditions>
+        <QueryHitsMaximumNumberValue>{{MAX_RESULTS}}</QueryHitsMaximumNumberValue>
+        <QueryHitsUnlimitedIndicator>{{UNLIMITED}}</QueryHitsUnlimitedIndicator>
+        <LastReturnedObjectID>{{LAST_OBJECT_ID}}</LastReturnedObjectID>
+      </ProcessingConditions>
+    </glob:MaterialByElementsQuery_sync>
+  </soapenv:Body>
+</soapenv:Envelope>
