@@ -1,0 +1,86 @@
+import requests
+
+# WooCommerce API credentials
+API_URL = 'https://shop.example.com/wp-json/wc/v3/customers'
+CONSUMER_KEY = 'ck_xxx'
+CONSUMER_SECRET = 'cs_xxx'
+
+def fetch_customers(api_url, consumer_key, consumer_secret):
+    """
+    Retrieves all customers from the WooCommerce API using pagination.
+    """
+    customers = []
+    page = 1
+
+    while True:
+        res = requests.get(api_url, params={'page': page, 'per_page': 100}, auth=(consumer_key, consumer_secret))
+        if res.status_code != 200:
+            print(f"Failed to fetch customers. Status code: {res.status_code}")
+            break
+
+        page_data = res.json()
+        if not page_data:
+            print("No more customers found.")
+            break
+
+        print(f"Page {page}: {len(page_data)} customers retrieved.")
+        customers.extend(page_data)
+        page += 1
+
+    return customers
+
+def generate_soap_payloads(customers):
+    """
+    Builds SOAP XML payloads for each WooCommerce customer.
+    """
+    soap_payloads = []
+    for customer in customers:
+        username = customer.get('username') or 'N/A'
+        first_name = customer.get('first_name') or 'N/A'
+        last_name = customer.get('last_name') or 'N/A'
+        email = customer.get('email') or 'N/A'
+
+        soap_xml = f'''<?xml version="1.0" encoding="UTF-8"?>
+<soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap-env:Header/>
+  <soap-env:Body>
+    <n0:CustomerBundleMaintainRequest_sync_V1 xmlns:n0="http://sap.com/xi/SAPGlobal20/Global">
+      <Customer actionCode="01">
+        <CategoryCode>1</CategoryCode>
+        <CustomerIndicator>true</CustomerIndicator>
+        <LifeCycleStatusCode>2</LifeCycleStatusCode>
+        <Person>
+          <GivenName>{first_name}</GivenName>
+          <FamilyName>{last_name}</FamilyName>
+        </Person>
+        <ContactInformation>
+          <Email>{email}</Email>
+        </ContactInformation>
+      </Customer>
+    </n0:CustomerBundleMaintainRequest_sync_V1>
+  </soap-env:Body>
+</soap-env:Envelope>'''
+        soap_payloads.append(soap_xml)
+
+    return soap_payloads
+
+def main():
+    try:
+        customers = fetch_customers(API_URL, CONSUMER_KEY, CONSUMER_SECRET)
+        if not customers:
+            print("No customers found.")
+            return
+
+        print(f"Total customers fetched: {len(customers)}")
+        payloads = generate_soap_payloads(customers)
+
+        for payload in payloads:
+            print("Generated SOAP Request:")
+            print(payload)
+            print("-" * 60)
+
+    except Exception as e:
+        print(f"Error occurred: {e}")
+
+if __name__ == "__main__":
+    main()
